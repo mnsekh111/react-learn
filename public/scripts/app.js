@@ -14,29 +14,66 @@ var App = function (_React$Component) {
     function App(props) {
         _classCallCheck(this, App);
 
-        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
+        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-        _this.user = {
+        _this.state = {
             name: "Jesse Lingaard",
             profession: "Footballer",
             age: 25,
             location: "Manchester",
             about: "I'm Man Utd's greatest number 10",
             likes: ["girls", "films", "football"]
+
         };
+        _this.clearLikes = _this.clearLikes.bind(_this);
+        _this.addLike = _this.addLike.bind(_this);
+        _this.getRandomLike = _this.getRandomLike.bind(_this);
         return _this;
     }
 
     _createClass(App, [{
+        key: "clearLikes",
+        value: function clearLikes() {
+            this.setState(function () {
+                return {
+                    likes: []
+                };
+            });
+        }
+    }, {
+        key: "addLike",
+        value: function addLike(like) {
+            if (!like || like.length === 0) {
+                return -1;
+            } else if (this.state.likes.includes(like)) {
+                return -2;
+            }
+
+            this.setState(function (prevState) {
+                return {
+                    likes: prevState.likes.concat([like])
+                };
+            });
+        }
+    }, {
+        key: "getRandomLike",
+        value: function getRandomLike() {
+            if (this.state.likes.length > 0) {
+                alert("Random Like " + this.state.likes[Math.floor(Math.random() * this.state.likes.length)]);
+            } else {
+                alert("No Likes.");
+            }
+        }
+    }, {
         key: "render",
         value: function render() {
             return React.createElement(
                 "div",
                 null,
-                React.createElement(Header, { heading: this.user.name, subHeading: this.user.profession }),
-                React.createElement(Action, null),
-                React.createElement(Options, { options: this.user.likes }),
-                React.createElement(AddOptions, { name: "Add likes" })
+                React.createElement(Header, { heading: this.state.name, subHeading: this.state.profession }),
+                React.createElement(Action, { randomListener: this.getRandomLike }),
+                React.createElement(Options, { clearListener: this.clearLikes, options: this.state.likes }),
+                React.createElement(AddOptions, { addListener: this.addLike, name: "Add likes" })
             );
         }
     }]);
@@ -91,7 +128,11 @@ var Action = function (_React$Component3) {
             return React.createElement(
                 "div",
                 null,
-                "Action"
+                React.createElement(
+                    "button",
+                    { onClick: this.props.randomListener },
+                    " Get Random"
+                )
             );
         }
     }]);
@@ -125,6 +166,11 @@ var Options = function (_React$Component4) {
                     this.props.options.map(function (option, index) {
                         return React.createElement(Option, { key: index, optionName: option });
                     })
+                ),
+                React.createElement(
+                    "button",
+                    { onClick: this.props.clearListener, disabled: this.props.options.length <= 0 },
+                    "Remove all"
                 )
             );
         }
@@ -159,23 +205,50 @@ var Option = function (_React$Component5) {
 var AddOptions = function (_React$Component6) {
     _inherits(AddOptions, _React$Component6);
 
-    function AddOptions() {
+    function AddOptions(props) {
         _classCallCheck(this, AddOptions);
 
-        return _possibleConstructorReturn(this, (AddOptions.__proto__ || Object.getPrototypeOf(AddOptions)).apply(this, arguments));
+        var _this6 = _possibleConstructorReturn(this, (AddOptions.__proto__ || Object.getPrototypeOf(AddOptions)).call(this, props));
+
+        _this6.addListenerLocal = _this6.addListenerLocal.bind(_this6);
+        _this6.state = {
+            showError: false
+        };
+        return _this6;
     }
 
     _createClass(AddOptions, [{
+        key: "addListenerLocal",
+        value: function addListenerLocal(event) {
+            event.preventDefault();
+            var showError = !!this.props.addListener(event.target.elements.newLike.value.trim());
+            this.setState(function () {
+                return {
+                    showError: showError
+                };
+            });
+        }
+    }, {
         key: "render",
         value: function render() {
             return React.createElement(
                 "div",
                 null,
-                React.createElement("input", { type: "text" }),
-                React.createElement(
-                    "button",
+                this.state.showError && React.createElement(
+                    "div",
                     null,
-                    this.props.name
+                    "Like length should be greater than 0 and not exist already"
+                ),
+                React.createElement(
+                    "form",
+                    { onSubmit: this.addListenerLocal },
+                    React.createElement("input", { type: "text", name: "newLike" }),
+                    React.createElement(
+                        "button",
+                        { type: "submit" },
+                        " ",
+                        this.props.name
+                    )
                 )
             );
         }

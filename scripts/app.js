@@ -1,26 +1,60 @@
 class App extends React.Component {
 
     constructor(props) {
-         super();
-         this. user = {
-             name : "Jesse Lingaard",
-             profession : "Footballer",
-             age : 25,
-             location : "Manchester",
-             about : "I'm Man Utd's greatest number 10",
-             likes : ["girls","films","football"]
-        };
+         super(props);
+         this.state =  {
+            name : "Jesse Lingaard",
+            profession : "Footballer",
+            age : 25,
+            location : "Manchester",
+            about : "I'm Man Utd's greatest number 10",
+            likes : ["girls","films","football"]
+
+         };
+         this.clearLikes = this.clearLikes.bind(this);
+         this.addLike = this.addLike.bind(this);
+         this.getRandomLike = this.getRandomLike.bind(this);
+    }
+
+    clearLikes() {
+        this.setState( ()=> {
+            return {
+                likes: []
+            }
+        })
+    }
+
+    addLike(like) {
+        if(!like || like.length === 0) {
+            return -1;
+        }else if(this.state.likes.includes(like)){
+            return -2;
+        }
+
+        this.setState((prevState) => {
+            return {
+                likes: prevState.likes.concat([like])
+            }
+        })
+    }
+
+    getRandomLike(){
+        if(this.state.likes.length > 0) {
+            alert("Random Like " + this.state.likes[Math.floor(Math.random() * this.state.likes.length)])
+        }else{
+            alert("No Likes.")
+        }
     }
 
     render() {
         return (
             <div>
-                <Header heading={this.user.name} subHeading={this.user.profession}/>
-                <Action />
-                <Options options={this.user.likes}/>
-                <AddOptions name="Add likes"/>
+                <Header heading={this.state.name} subHeading={this.state.profession}/>
+                <Action randomListener={this.getRandomLike}/>
+                <Options clearListener={this.clearLikes} options={this.state.likes}/>
+                <AddOptions addListener={this.addLike} name="Add likes"/>
             </div>
-        )
+        );
     }
 }
 
@@ -37,7 +71,11 @@ class Header extends React.Component {
 
 class Action extends React.Component {
     render() {
-        return <div>Action</div>
+        return (
+            <div>
+                <button onClick={this.props.randomListener}> Get Random</button>
+            </div>
+        );
     }
 }
 
@@ -51,6 +89,7 @@ class Options extends React.Component {
                         return <Option key={index} optionName={option}/>
                     })}
                 </ul>
+                <button onClick={this.props.clearListener} disabled={this.props.options.length <= 0}>Remove all</button>
             </div>
         )
     }
@@ -64,11 +103,34 @@ class Option extends React.Component {
 
 
 class AddOptions extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.addListenerLocal = this.addListenerLocal.bind(this);
+        this.state = {
+            showError: false
+        };
+    }
+
+    addListenerLocal(event) {
+        event.preventDefault();
+        const showError = !!this.props.addListener(event.target.elements.newLike.value.trim());
+        this.setState( () => {
+            return {
+                showError
+            };
+        })
+
+    }
+
     render() {
         return (
             <div>
-                <input type="text" />
-                <button>{this.props.name}</button>
+                { this.state.showError && <div>Like length should be greater than 0 and not exist already</div> }
+                <form onSubmit={this.addListenerLocal}>
+                    <input type="text" name="newLike"/>
+                    <button type="submit"> {this.props.name}</button>
+                </form>
             </div>
         );
     }
