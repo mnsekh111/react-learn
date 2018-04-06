@@ -1,6 +1,20 @@
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -16,32 +30,57 @@ var App = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-        _this.state = {
-            name: "Jesse Lingaard",
-            profession: "Footballer",
-            age: 25,
-            location: "Manchester",
-            about: "I'm Man Utd's greatest number 10",
-            likes: ["girls", "films", "football"]
-
-        };
+        _this.state = props;
         _this.clearLikes = _this.clearLikes.bind(_this);
+        _this.clearLike = _this.clearLike.bind(_this);
         _this.addLike = _this.addLike.bind(_this);
         _this.getRandomLike = _this.getRandomLike.bind(_this);
         return _this;
     }
 
     _createClass(App, [{
-        key: "clearLikes",
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            try {
+                var state = JSON.parse(localStorage.getItem(this.constructor.name));
+                this.setState(function () {
+                    return state;
+                });
+                console.log("State is loaded");
+            } catch (ex) {
+                console.log("No valid previous state");
+            }
+        }
+    }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate(prevProps, prevState) {
+            try {
+                if (JSON.stringify(prevState) !== JSON.stringify(this.state)) {
+                    localStorage.setItem(this.constructor.name, JSON.stringify(this.state));
+                    console.log("State is saved.");
+                }
+            } catch (ex) {}
+        }
+    }, {
+        key: 'clearLikes',
         value: function clearLikes() {
             this.setState(function () {
+                return { likes: [] };
+            });
+        }
+    }, {
+        key: 'clearLike',
+        value: function clearLike(like) {
+            this.setState(function (prevState) {
                 return {
-                    likes: []
+                    likes: prevState.likes.filter(function (item) {
+                        return item !== like;
+                    })
                 };
             });
         }
     }, {
-        key: "addLike",
+        key: 'addLike',
         value: function addLike(like) {
             if (!like || like.length === 0) {
                 return -1;
@@ -56,7 +95,7 @@ var App = function (_React$Component) {
             });
         }
     }, {
-        key: "getRandomLike",
+        key: 'getRandomLike',
         value: function getRandomLike() {
             if (this.state.likes.length > 0) {
                 alert("Random Like " + this.state.likes[Math.floor(Math.random() * this.state.likes.length)]);
@@ -65,21 +104,21 @@ var App = function (_React$Component) {
             }
         }
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
-            return React.createElement(
-                "div",
+            return _react2.default.createElement(
+                'div',
                 null,
-                React.createElement(Header, { heading: this.state.name, subHeading: this.state.profession }),
-                React.createElement(Action, { randomListener: this.getRandomLike }),
-                React.createElement(Options, { clearListener: this.clearLikes, options: this.state.likes }),
-                React.createElement(AddOptions, { addListener: this.addLike, name: "Add likes" })
+                _react2.default.createElement(Header, { heading: this.state.name, subHeading: this.state.profession }),
+                _react2.default.createElement(Action, { randomListener: this.getRandomLike }),
+                _react2.default.createElement(Options, { clearOneListener: this.clearLike, clearListener: this.clearLikes, options: this.state.likes }),
+                _react2.default.createElement(AddOptions, { addListener: this.addLike, name: 'Add likes' })
             );
         }
     }]);
 
     return App;
-}(React.Component);
+}(_react2.default.Component);
 
 var Header = function (_React$Component2) {
     _inherits(Header, _React$Component2);
@@ -91,18 +130,18 @@ var Header = function (_React$Component2) {
     }
 
     _createClass(Header, [{
-        key: "render",
+        key: 'render',
         value: function render() {
-            return React.createElement(
-                "div",
+            return _react2.default.createElement(
+                'div',
                 null,
-                React.createElement(
-                    "h1",
+                _react2.default.createElement(
+                    'h1',
                     null,
                     this.props.heading
                 ),
-                React.createElement(
-                    "h2",
+                _react2.default.createElement(
+                    'h2',
                     null,
                     this.props.subHeading
                 )
@@ -111,7 +150,7 @@ var Header = function (_React$Component2) {
     }]);
 
     return Header;
-}(React.Component);
+}(_react2.default.Component);
 
 var Action = function (_React$Component3) {
     _inherits(Action, _React$Component3);
@@ -123,22 +162,22 @@ var Action = function (_React$Component3) {
     }
 
     _createClass(Action, [{
-        key: "render",
+        key: 'render',
         value: function render() {
-            return React.createElement(
-                "div",
+            return _react2.default.createElement(
+                'div',
                 null,
-                React.createElement(
-                    "button",
+                _react2.default.createElement(
+                    'button',
                     { onClick: this.props.randomListener },
-                    " Get Random"
+                    ' Get Random'
                 )
             );
         }
     }]);
 
     return Action;
-}(React.Component);
+}(_react2.default.Component);
 
 var Options = function (_React$Component4) {
     _inherits(Options, _React$Component4);
@@ -150,34 +189,41 @@ var Options = function (_React$Component4) {
     }
 
     _createClass(Options, [{
-        key: "render",
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            // console.log(this.constructor.name + " is updated");
+        }
+    }, {
+        key: 'render',
         value: function render() {
-            return React.createElement(
-                "div",
+            var _this5 = this;
+
+            return _react2.default.createElement(
+                'div',
                 null,
-                React.createElement(
-                    "h3",
+                _react2.default.createElement(
+                    'h3',
                     null,
-                    "The likes are : "
+                    'The likes are : '
                 ),
-                React.createElement(
-                    "ul",
+                _react2.default.createElement(
+                    'ul',
                     null,
                     this.props.options.map(function (option, index) {
-                        return React.createElement(Option, { key: index, optionName: option });
+                        return _react2.default.createElement(Option, { key: index, optionName: option, clearOneListener: _this5.props.clearOneListener });
                     })
                 ),
-                React.createElement(
-                    "button",
+                _react2.default.createElement(
+                    'button',
                     { onClick: this.props.clearListener, disabled: this.props.options.length <= 0 },
-                    "Remove all"
+                    'Remove all'
                 )
             );
         }
     }]);
 
     return Options;
-}(React.Component);
+}(_react2.default.Component);
 
 var Option = function (_React$Component5) {
     _inherits(Option, _React$Component5);
@@ -189,18 +235,36 @@ var Option = function (_React$Component5) {
     }
 
     _createClass(Option, [{
-        key: "render",
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            // console.log(this.constructor.name + " is unmounted");
+        }
+    }, {
+        key: 'render',
         value: function render() {
-            return React.createElement(
-                "li",
+            var _this7 = this;
+
+            return _react2.default.createElement(
+                'div',
                 null,
-                this.props.optionName
+                _react2.default.createElement(
+                    'li',
+                    null,
+                    this.props.optionName,
+                    _react2.default.createElement(
+                        'button',
+                        { onClick: function onClick() {
+                                _this7.props.clearOneListener(_this7.props.optionName);
+                            } },
+                        ' Delete this !'
+                    )
+                )
             );
         }
     }]);
 
     return Option;
-}(React.Component);
+}(_react2.default.Component);
 
 var AddOptions = function (_React$Component6) {
     _inherits(AddOptions, _React$Component6);
@@ -208,20 +272,21 @@ var AddOptions = function (_React$Component6) {
     function AddOptions(props) {
         _classCallCheck(this, AddOptions);
 
-        var _this6 = _possibleConstructorReturn(this, (AddOptions.__proto__ || Object.getPrototypeOf(AddOptions)).call(this, props));
+        var _this8 = _possibleConstructorReturn(this, (AddOptions.__proto__ || Object.getPrototypeOf(AddOptions)).call(this, props));
 
-        _this6.addListenerLocal = _this6.addListenerLocal.bind(_this6);
-        _this6.state = {
+        _this8.addListenerLocal = _this8.addListenerLocal.bind(_this8);
+        _this8.state = {
             showError: false
         };
-        return _this6;
+        return _this8;
     }
 
     _createClass(AddOptions, [{
-        key: "addListenerLocal",
+        key: 'addListenerLocal',
         value: function addListenerLocal(event) {
             event.preventDefault();
             var showError = !!this.props.addListener(event.target.elements.newLike.value.trim());
+            event.target.elements.newLike.value = "";
             this.setState(function () {
                 return {
                     showError: showError
@@ -229,24 +294,24 @@ var AddOptions = function (_React$Component6) {
             });
         }
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
-            return React.createElement(
-                "div",
+            return _react2.default.createElement(
+                'div',
                 null,
-                this.state.showError && React.createElement(
-                    "div",
+                this.state.showError && _react2.default.createElement(
+                    'div',
                     null,
-                    "Like length should be greater than 0 and not exist already"
+                    'Like length should be greater than 0 and not exist already'
                 ),
-                React.createElement(
-                    "form",
+                _react2.default.createElement(
+                    'form',
                     { onSubmit: this.addListenerLocal },
-                    React.createElement("input", { type: "text", name: "newLike" }),
-                    React.createElement(
-                        "button",
-                        { type: "submit" },
-                        " ",
+                    _react2.default.createElement('input', { type: 'text', name: 'newLike' }),
+                    _react2.default.createElement(
+                        'button',
+                        { type: 'submit' },
+                        ' ',
                         this.props.name
                     )
                 )
@@ -255,6 +320,28 @@ var AddOptions = function (_React$Component6) {
     }]);
 
     return AddOptions;
-}(React.Component);
+}(_react2.default.Component);
 
-ReactDOM.render(React.createElement(App, null), document.getElementById('app'));
+var StatelessComp = function StatelessComp(props) {
+    return _react2.default.createElement(
+        'div',
+        null,
+        'This is a state less component : ',
+        props.name
+    );
+};
+
+StatelessComp.defaultProps = {
+    name: "State Default"
+};
+
+App.defaultProps = {
+    name: "Jesse Lingaard",
+    profession: "Footballer",
+    age: 25,
+    location: "Manchester",
+    about: "I'm Man Utd's greatest number 10",
+    likes: ["girls", "films", "football"]
+};
+
+_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));

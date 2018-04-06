@@ -1,27 +1,48 @@
+import _ from 'lodash'
+import React from 'react'
+import ReactDOM from 'react-dom'
+
 class App extends React.Component {
 
     constructor(props) {
          super(props);
-         this.state =  {
-            name : "Jesse Lingaard",
-            profession : "Footballer",
-            age : 25,
-            location : "Manchester",
-            about : "I'm Man Utd's greatest number 10",
-            likes : ["girls","films","football"]
-
-         };
+         this.state =  props;
          this.clearLikes = this.clearLikes.bind(this);
+         this.clearLike = this.clearLike.bind(this);
          this.addLike = this.addLike.bind(this);
          this.getRandomLike = this.getRandomLike.bind(this);
     }
 
-    clearLikes() {
-        this.setState( ()=> {
-            return {
-                likes: []
+    componentDidMount() {
+        try{
+            let state = JSON.parse(localStorage.getItem(this.constructor.name));
+            this.setState( () => (state));
+            console.log("State is loaded");
+        }catch( ex){
+            console.log("No valid previous state");
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        try {
+            if (JSON.stringify(prevState) !== JSON.stringify(this.state)) {
+                localStorage.setItem(this.constructor.name, JSON.stringify(this.state));
+                console.log("State is saved.")
             }
-        })
+        }catch( ex){
+
+        }
+
+    }
+
+    clearLikes() {
+        this.setState( ()=> ({likes: []}));
+    }
+
+    clearLike(like) {
+        this.setState( (prevState) => ({
+            likes : prevState.likes.filter( (item) => item !== like)
+        }));
     }
 
     addLike(like) {
@@ -31,11 +52,9 @@ class App extends React.Component {
             return -2;
         }
 
-        this.setState((prevState) => {
-            return {
+        this.setState((prevState) => ({
                 likes: prevState.likes.concat([like])
-            }
-        })
+        }));
     }
 
     getRandomLike(){
@@ -51,7 +70,7 @@ class App extends React.Component {
             <div>
                 <Header heading={this.state.name} subHeading={this.state.profession}/>
                 <Action randomListener={this.getRandomLike}/>
-                <Options clearListener={this.clearLikes} options={this.state.likes}/>
+                <Options clearOneListener= {this.clearLike} clearListener={this.clearLikes} options={this.state.likes}/>
                 <AddOptions addListener={this.addLike} name="Add likes"/>
             </div>
         );
@@ -80,13 +99,17 @@ class Action extends React.Component {
 }
 
 class Options extends React.Component {
+    componentDidUpdate() {
+        // console.log(this.constructor.name + " is updated");
+    }
+
     render() {
         return (
             <div>
                 <h3>The likes are : </h3>
                 <ul>
                     {this.props.options.map( (option, index) => {
-                        return <Option key={index} optionName={option}/>
+                        return <Option key={index} optionName={option} clearOneListener={this.props.clearOneListener}/>
                     })}
                 </ul>
                 <button onClick={this.props.clearListener} disabled={this.props.options.length <= 0}>Remove all</button>
@@ -96,8 +119,20 @@ class Options extends React.Component {
 }
 
 class Option extends React.Component {
+
+    componentWillUnmount() {
+        // console.log(this.constructor.name + " is unmounted");
+    }
+
     render() {
-        return <li>{this.props.optionName}</li>
+        return (
+            <div>
+                <li>
+                    {this.props.optionName}
+                    <button onClick={() => {this.props.clearOneListener(this.props.optionName)}}> Delete this !</button>
+                </li>
+            </div>
+        );
     }
 }
 
@@ -108,13 +143,14 @@ class AddOptions extends React.Component {
         super(props);
         this.addListenerLocal = this.addListenerLocal.bind(this);
         this.state = {
-            showError: false
+            showError: false,
         };
     }
 
     addListenerLocal(event) {
         event.preventDefault();
         const showError = !!this.props.addListener(event.target.elements.newLike.value.trim());
+        event.target.elements.newLike.value = "";
         this.setState( () => {
             return {
                 showError
@@ -136,4 +172,25 @@ class AddOptions extends React.Component {
     }
 }
 
-ReactDOM.render( <App />, document.getElementById('app'))
+const StatelessComp = (props) => {
+    return (
+        <div>
+            This is a state less component : {props.name}
+        </div>
+    )
+}
+
+StatelessComp.defaultProps = {
+    name : "State Default"
+}
+
+App.defaultProps = {
+    name : "Jesse Lingaard",
+    profession : "Footballer",
+    age : 25,
+    location : "Manchester",
+    about : "I'm Man Utd's greatest number 10",
+    likes : ["girls","films","footballs"]
+}
+
+ReactDOM.render( <App/>, document.getElementById('app'))
