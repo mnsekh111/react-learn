@@ -1,0 +1,16 @@
+.header {
+    background-color:  $base-color;
+    padding: 10px;
+}
+
+.header__title {
+    font-size: $big-font;
+    color: white;
+    padding: 10px;
+}
+
+.header__subheading {
+    font-size: $med-font;
+    color: grey;
+    padding-left: 10px;
+}

@@ -1,0 +1,42 @@
+body {
+  font-family: Helvetica , sans-serif;
+  font-size: $small-font;
+  background: darken($base-color,20);
+  color: white;
+}
+
+.container {
+  max-width: 50%;
+  margin: 10px auto
+}
+
+.container__light {
+  background-color: lighten($base-color,20);
+}
+
+.container--two-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  background-color: darken($base-color,10);
+  overflow: auto;
+}
+
+.modal {
+  color: black;
+}
+
+button {
+  border: none;
+  border-bottom: lighten($base-color,10);
+  background-color: $base-color;
+  color: white;
+  padding: 10px;
+  cursor: hand;
+}
+
+button:disabled {
+  background-color: darken($base-color,30);
+  color: grey;
+  cursor: default
+}
