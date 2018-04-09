@@ -1,0 +1,40 @@
+{
+  "name": "react-learn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "live-server public/",
+    "build": "webpack",
+    "build-babel": "babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "browser-sync": "^2.23.6",
+    "file-loader": "^1.1.11",
+    "live-server": "^1.2.0",
+    "lodash": "^4.17.5",
+    "node-sass": "^4.8.3",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "sass-loader": "^6.0.7",
+    "semantic-ui-css": "^2.3.1",
+    "semantic-ui-react": "^0.79.1",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.5.0"
+  },
+  "devDependencies": {
+    "browser-sync-webpack-plugin": "^2.2.2",
+    "connect-history-api-fallback": "^1.5.0",
+    "css-loader": "^0.28.11",
+    "style-loader": "^0.20.3",
+    "webpack-cli": "^2.0.14"
+  }
+}

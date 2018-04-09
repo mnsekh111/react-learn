@@ -1,6 +1,5 @@
 console.log("Script is loaded");
 
-
 const user = {
     name : "Jesse Lingaard",
     age : 25,
