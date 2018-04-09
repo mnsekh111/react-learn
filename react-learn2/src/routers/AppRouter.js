@@ -13,11 +13,11 @@ const AppRouter = () => (
         <div>
             <Header/>
             <Switch>
-                <Route path="/" component={ExpenseDashboardPage} exact={true}></Route>
-                <Route path="/create" component={AddExpensePage} exact={true}></Route>
-                <Route path="/edit" component={EditExpensePage} exact={true}></Route>
-                <Route path="/help" component={HelpPage} exact={true}></Route>
-                <Route component={NotFoundPage} exact={true}></Route>
+                <Route path="/" component={ExpenseDashboardPage} exact = {true}/>
+                <Route path="/create" component={AddExpensePage} />
+                <Route path="/edit/:id" component={EditExpensePage} />
+                <Route path="/help" component={HelpPage}/>
+                <Route component={NotFoundPage} />
             </Switch>
         </div>
     </BrowserRouter>

@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, NavLink} from 'react-router-dom';
 const Header = () => (
     <div>
-        Expensify
+        Expensify App
         <Link to="/">Dashboard</Link>
         <Link to="/create">Create</Link>
         <Link to="/edit">Edit</Link>
