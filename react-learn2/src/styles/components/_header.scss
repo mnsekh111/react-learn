@@ -1,0 +1,14 @@
+.navParent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: lightcoral;
+
+}
+
+.navParent > a {
+  border: medium;
+  padding: 20px;
+
+}
