@@ -3,7 +3,7 @@ import moment from 'moment';
 
 const addExpense = (expense) => {
     expense.id= uuid();
-    expense.createAt = moment().utc();
+    expense.createdAt = expense.createdAt || parseInt(moment().utc().format('X')); // Get unix time stamp
     return {
         type: 'ADD_EXPENSE',
         expense

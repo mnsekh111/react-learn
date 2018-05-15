@@ -1,0 +1,40 @@
+.ef-container {
+  display: flex;
+  background-color: lightslategrey;
+  form{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    display:flex;
+    flex-direction: row;
+
+    .left {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      .form-item {
+        display: flex;
+        flex-direction: row;
+        label {
+          width: 50%;
+        }
+        input {
+          width: 50%;
+          padding: 2%;
+        }
+      }
+    }
+
+    .right {
+      width: 30%;
+      align-self: center;
+      text-align: center;
+      > input {
+        padding: 5%;
+        box-sizing: border-box;
+        background-color: aqua;
+      }
+    }
+  }
+}

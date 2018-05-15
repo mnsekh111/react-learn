@@ -1,0 +1,15 @@
+.elf-container {
+  display: flex;
+  justify-content: center;
+  background-color: lightskyblue;
+  padding: 1%;
+  margin-bottom: 1%;
+  box-sizing: border-box;
+  align-items: center;
+
+  > input, select {
+    padding :1%;
+    margin: 1%
+  }
+
+}
