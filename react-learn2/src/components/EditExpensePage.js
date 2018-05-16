@@ -1,9 +1,23 @@
 import React from 'react';
+import ExpenseForm from './ExpenseForm';
+import {connect} from 'react-redux';
+import {editExpense} from "../actions/expenses";
+
 const EditExpensePage = (props) => {
     return(
         <div>
-            This is edit expense page with id {props.match.params.id}
+            {props.expense ? <ExpenseForm {...props.expense} onSubmit={(expense)=>{
+                props.dispatch(editExpense(props.expense.id,expense));
+                props.history.push('/');
+            }}/> : "Not a valid expense"}
         </div>
     );
 };
-export default EditExpensePage;
+
+const mapStatetoProps = (state,props) => {
+    return {
+        expense : state.expenses.filter((item) => props.match.params.id === item.id)[0]
+    }
+};
+
+export default connect(mapStatetoProps)(EditExpensePage);
