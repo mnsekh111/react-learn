@@ -1,11 +1,16 @@
 import React from 'react';
+import moment from 'moment';
 import {connect} from 'react-redux';
-import {setTextFilter, sortByDate, sortByAmount} from '../actions/filters';
+import {setTextFilter, sortByDate, sortByAmount, setStartDate, setEndDate} from '../actions/filters';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-export class ExpenseListFilters extends React.Component {
-    onDatesChange = ({startDate, endDate}) => {
-        this.props.setStartDate(startDate);
-        this.props.setEndDate(endDate);
+class ExpenseListFilters extends React.Component {
+    onStartDateChange = (startDateMoment) => {
+        this.props.setStartDate(startDateMoment.format('X'));
+    };
+    onEndDateChange = (endDateMoment) => {
+        this.props.setEndDate(endDateMoment.format('X'));
     };
     onTextChange = (e) => {
         this.props.setTextFilter(e.target.value);
@@ -39,6 +44,22 @@ export class ExpenseListFilters extends React.Component {
                     <option value="date">Date</option>
                     <option value="amount">Amount</option>
                 </select>
+
+                <DatePicker
+                    selected={moment(this.props.filters.startDate,'X')}
+                    selectsStart
+                    startDate={moment(this.props.filters.startDate,'X')}
+                    endDate={moment(this.props.filters.endDate,'X')}
+                    onChange={this.onStartDateChange}
+                />
+
+                <DatePicker
+                    selected={moment(this.props.filters.endDate,'X')}
+                    selectsEnd
+                    startDate={moment(this.props.filters.startDate,'X')}
+                    endDate={moment(this.props.filters.endDate,'X')}
+                    onChange={this.onEndDateChange}
+                />
 
             </div>
         );

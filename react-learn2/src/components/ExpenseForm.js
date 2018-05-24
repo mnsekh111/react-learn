@@ -10,7 +10,7 @@ class ExpenseForm extends React.Component {
         this.state = {
             description: this.props.description,
             amount: this.props.amount,
-            createdAt: moment(this.props.createdAt,'X'),
+            createdAt: this.props.createdAt,
             error: ''
         };
 
@@ -47,8 +47,8 @@ class ExpenseForm extends React.Component {
         }
     }
 
-    onDateChange(createdAt) {
-        this.setState(() => ({createdAt }));
+    onDateChange(createdAtMoment) {
+        this.setState(() => ({createdAt : createdAtMoment.format('X') }));
     }
 
     render() {
@@ -79,7 +79,7 @@ class ExpenseForm extends React.Component {
                         <div className="form-item">
                             <label> Date</label>
                             <DatePicker
-                                selected={this.state.createdAt}
+                                selected={moment(this.state.createdAt,'X')}
                                 onChange={this.onDateChange}
                                 dateFormat="YYYY/MM/DD"
                             />
@@ -97,7 +97,7 @@ class ExpenseForm extends React.Component {
 ExpenseForm.defaultProps = {
     description: '',
     amount: '',
-    createdAt: parseInt(moment().utc().format('X')),
+    createdAt: moment().utc().format('X'),
     onSubmit: () => {
         console.log("onSubmit must be passed as a prop");
     }

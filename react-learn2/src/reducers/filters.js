@@ -4,8 +4,8 @@ import moment from 'moment';
 const defaultState = {
     text:'' ,
     sortBy: 'date',
-    startDate: moment().startOf('month'),
-    endDate: moment().endOf('month')
+    startDate: moment().startOf('year').format('X'),
+    endDate: moment().endOf('month').format('X')
 }
 
 const filters = (prevState = defaultState, action) => {
